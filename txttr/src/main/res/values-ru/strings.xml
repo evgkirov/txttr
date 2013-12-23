@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Txttr</string>
+    <string name="enable">Включить</string>
+    <string name="message_error_nick_required">Вы не указали ник.</string>
+    <string name="message_error_nick_too_short">Ник слишком короткий (нужно мин %d символа).</string>
+    <string name="message_error_nick_too_long">Ник слишком длинный (нужно макс %d символа).</string>
+    <string name="message_error_nick_taken">Ник уже кем-то занят.</string>
+    <string name="message_success_registration">Регистрация успешна.</string>
+    <string name="message_success_unregistration">Вы отписались от чата.</string>
+    <string name="message_registered_users">Пользователи: %s.</string>
+    <string name="message_sent">Ваше сообщение отправлено.</string>
+
+</resources>
