@@ -6,7 +6,7 @@ Simple single-room SMS chat server for Android.
 How to use
 ----------
 
-1. Install app on your “server” phone, run it and tap *Enabled*.
+1. Install the app on your “server” phone, run it and tap *Enabled*.
 2. Now users can register and chat on your server.
 
 Commands
