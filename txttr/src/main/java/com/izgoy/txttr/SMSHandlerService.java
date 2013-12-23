@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -50,6 +51,10 @@ public class SMSHandlerService extends IntentService {
             String command = args[0].toLowerCase();
             if (command.equals("on")) {
                 handleCommandOn(address, args);
+                return;
+            }
+            if (command.equals("list")) {
+                handleCommandList(address, args);
                 return;
             }
             /*if (command.equals("off")) {
@@ -105,6 +110,13 @@ public class SMSHandlerService extends IntentService {
         userManager.unregister(address);
         smsManager.sendTextMessage(address, null,
                 getString(R.string.message_success_unregistration), null, null);
+    }
+
+    private void handleCommandList(String address, String[] args) {
+        String reply = getString(R.string.message_registered_users,
+                TextUtils.join(", ", userManager.getAll().values()));
+        ArrayList<String> parts = smsManager.divideMessage(reply);
+        smsManager.sendMultipartTextMessage(address, null, parts, null, null);
     }
 
 }
