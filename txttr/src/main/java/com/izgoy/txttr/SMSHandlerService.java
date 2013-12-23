@@ -67,8 +67,12 @@ public class SMSHandlerService extends IntentService {
             String body2 = String.format("%s: %s", nick.toUpperCase(), body);
             ArrayList<String> parts = smsManager.divideMessage(body2);
             for (Map.Entry<String, String> user : userManager.getAll().entrySet()) {
-                smsManager.sendMultipartTextMessage(user.getKey(), null, parts, null, null);
+                if (!address.equals(user.getKey())) {
+                    smsManager.sendMultipartTextMessage(user.getKey(), null, parts, null, null);
+                }
             }
+            smsManager.sendTextMessage(address, null,
+                    getString(R.string.message_sent), null, null);
         }
     }
 
