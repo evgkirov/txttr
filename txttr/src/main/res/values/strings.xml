@@ -10,6 +10,5 @@
     <string name="message_success_registration">Registration complete.</string>
     <string name="message_success_unregistration">You have successfully unsubscribed.</string>
     <string name="message_registered_users">Registered users: %s</string>
-    <string name="message_sent">Message sent.</string>
 
 </resources>

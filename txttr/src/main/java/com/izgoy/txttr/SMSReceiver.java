@@ -10,9 +10,9 @@ import android.telephony.SmsMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SMSReceiver extends BroadcastReceiver {
+public class SmsReceiver extends BroadcastReceiver {
 
-    public SMSReceiver() {
+    public SmsReceiver() {
     }
 
     @Override
@@ -28,7 +28,7 @@ public class SMSReceiver extends BroadcastReceiver {
             return;
         }
         for (Map.Entry<String, String> message : messages.entrySet()) {
-            SMSHandlerService.startHandleSMS(context, message.getKey(), message.getValue());
+            SmsHandlerService.startHandleSMS(context, message.getKey(), message.getValue());
         }
 
     }

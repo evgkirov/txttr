@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SMSHandlerService extends IntentService {
+public class SmsHandlerService extends IntentService {
 
     public static final String ACTION_HANDLE_SMS = "com.izgoy.txttr.action.HANDLE_SMS";
 
@@ -20,15 +20,15 @@ public class SMSHandlerService extends IntentService {
     private SmsManager smsManager;
 
     public static void startHandleSMS(Context context, String address, String body) {
-        Intent intent = new Intent(context, SMSHandlerService.class);
+        Intent intent = new Intent(context, SmsHandlerService.class);
         intent.setAction(ACTION_HANDLE_SMS);
         intent.putExtra(EXTRA_ADDRESS, address);
         intent.putExtra(EXTRA_BODY, body);
         context.startService(intent);
     }
 
-    public SMSHandlerService() {
-        super("SMSHandlerService");
+    public SmsHandlerService() {
+        super("SmsHandlerService");
     }
 
     @Override
@@ -71,8 +71,7 @@ public class SMSHandlerService extends IntentService {
                     smsManager.sendMultipartTextMessage(user.getKey(), null, parts, null, null);
                 }
             }
-            smsManager.sendTextMessage(address, null,
-                    getString(R.string.message_sent), null, null);
+            smsManager.sendMultipartTextMessage(address, null, parts, null, null);
         }
     }
 
