@@ -7,8 +7,10 @@
     <string name="message_error_nick_too_short">Ник слишком короткий (нужно мин %d символа).</string>
     <string name="message_error_nick_too_long">Ник слишком длинный (нужно макс %d символа).</string>
     <string name="message_error_nick_taken">Ник уже кем-то занят.</string>
-    <string name="message_success_registration">Регистрация успешна.</string>
+    <string name="message_success_registration">Добро пожаловать в чат.</string>
+    <string name="message_success_registration_all">Поприветствуем %s!</string>
     <string name="message_success_unregistration">Вы отписались от чата.</string>
+    <string name="message_success_unregistration_all">%s вышел из чата.</string>
     <string name="message_registered_users">Пользователи: %s.</string>
 
 </resources>
