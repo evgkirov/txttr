@@ -3,6 +3,7 @@ package com.izgoy.txttr;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -31,6 +32,9 @@ public class SmsHandlerService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+        wakeLock.acquire();
         userManager = new UserManager(this);
         if (intent != null) {
             final String action = intent.getAction();
@@ -40,6 +44,7 @@ public class SmsHandlerService extends IntentService {
                 handleSMS(address, body);
             }
         }
+        wakeLock.release();
     }
 
     private void handleSMS(String address, String body) {
