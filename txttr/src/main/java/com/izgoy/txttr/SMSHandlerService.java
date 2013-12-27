@@ -3,13 +3,12 @@ package com.izgoy.txttr;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.SmsManager;
 import android.text.TextUtils;
-
-import java.util.ArrayList;
-import java.util.Map;
+import android.util.Log;
 
 public class SmsHandlerService extends IntentService {
+
+    public static final String TAG = "SmsHandlerService";
 
     public static final String ACTION_HANDLE_SMS = "com.izgoy.txttr.action.HANDLE_SMS";
 
@@ -17,7 +16,6 @@ public class SmsHandlerService extends IntentService {
     public static final String EXTRA_BODY = "com.izgoy.txttr.extra.BODY";
 
     private UserManager userManager;
-    private SmsManager smsManager;
 
     public static void startHandleSMS(Context context, String address, String body) {
         Intent intent = new Intent(context, SmsHandlerService.class);
@@ -34,7 +32,6 @@ public class SmsHandlerService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         userManager = new UserManager(this);
-        smsManager = SmsManager.getDefault();
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_HANDLE_SMS.equals(action)) {
@@ -46,6 +43,7 @@ public class SmsHandlerService extends IntentService {
     }
 
     private void handleSMS(String address, String body) {
+        Log.v(TAG, address + " >>> " + body);
         String[] args = body.split(" ");
         if (args.length > 0) {
             String command = args[0].toLowerCase();
@@ -57,69 +55,61 @@ public class SmsHandlerService extends IntentService {
                 handleCommandList(address, args);
                 return;
             }
-            /*if (command.equals("off")) {
+            if (command.equals("off")) {
                 handleCommandOff(address, args);
                 return;
-            }*/
+            }
         }
         if (userManager.isAddressRegistered(address)) {
             String nick = userManager.getAll().get(address);
             String body2 = String.format("%s: %s", nick.toUpperCase(), body);
-            ArrayList<String> parts = smsManager.divideMessage(body2);
-            for (Map.Entry<String, String> user : userManager.getAll().entrySet()) {
-                if (!address.equals(user.getKey())) {
-                    smsManager.sendMultipartTextMessage(user.getKey(), null, parts, null, null);
-                }
-            }
-            smsManager.sendMultipartTextMessage(address, null, parts, null, null);
+            userManager.sendTextMessageToAll(body2, address);
+            userManager.sendTextMessage(address, body2);
         }
     }
 
     private void handleCommandOn(String address, String[] args) {
 
         if (args.length < 2) {
-            smsManager.sendTextMessage(address, null,
-                    getString(R.string.message_error_nick_required), null, null);
+            userManager.sendTextMessage(address, getString(R.string.message_error_nick_required));
             return;
         }
 
         String nick = args[1].toUpperCase();
 
         if (userManager.isNickRegistered(nick)) {
-            smsManager.sendTextMessage(address, null,
-                    getString(R.string.message_error_nick_taken), null, null);
+            userManager.sendTextMessage(address, getString(R.string.message_error_nick_taken));
             return;
         }
 
         if (nick.length() < TxttrApplication.MIN_NICK_LENGTH) {
-            smsManager.sendTextMessage(address, null,
-                    getString(R.string.message_error_nick_too_short, TxttrApplication.MIN_NICK_LENGTH), null, null);
+            userManager.sendTextMessage(address, getString(R.string.message_error_nick_too_short, TxttrApplication.MIN_NICK_LENGTH));
             return;
         }
 
         if (nick.length() > TxttrApplication.MAX_NICK_LENGTH) {
-            smsManager.sendTextMessage(address, null,
-                    getString(R.string.message_error_nick_too_long, TxttrApplication.MAX_NICK_LENGTH), null, null);
+            userManager.sendTextMessage(address, getString(R.string.message_error_nick_too_long, TxttrApplication.MAX_NICK_LENGTH));
             return;
         }
 
         userManager.register(address, nick);
-        smsManager.sendTextMessage(address, null,
-                getString(R.string.message_success_registration), null, null);
-
+        userManager.sendTextMessage(address, getString(R.string.message_success_registration));
+        userManager.sendTextMessageToAll(getString(R.string.message_success_registration_all, nick), address);
     }
 
     private void handleCommandOff(String address, String[] args) {
+        String nick = userManager.getNick(address);
         userManager.unregister(address);
-        smsManager.sendTextMessage(address, null,
-                getString(R.string.message_success_unregistration), null, null);
+        userManager.sendTextMessage(address, getString(R.string.message_success_unregistration));
+        if (nick != null) {
+            userManager.sendTextMessageToAll(getString(R.string.message_success_unregistration_all, nick), address);
+        }
     }
 
     private void handleCommandList(String address, String[] args) {
         String reply = getString(R.string.message_registered_users,
                 TextUtils.join(", ", userManager.getAll().values()));
-        ArrayList<String> parts = smsManager.divideMessage(reply);
-        smsManager.sendMultipartTextMessage(address, null, parts, null, null);
+        userManager.sendTextMessage(address, reply);
     }
 
 }
