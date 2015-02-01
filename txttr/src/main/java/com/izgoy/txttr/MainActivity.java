@@ -22,6 +22,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         enableCheckBox = (CheckBox) findViewById(R.id.enable);
         enableCheckBox.setOnClickListener(this);
         enableCheckBox.setChecked(settings.getBoolean(TxttrApplication.PREF_ENABLED, false));
+
     }
 
     private void onEnableClick(View view) {

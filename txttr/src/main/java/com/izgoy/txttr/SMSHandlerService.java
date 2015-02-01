@@ -48,7 +48,7 @@ public class SmsHandlerService extends IntentService {
     }
 
     private void handleSMS(String address, String body) {
-        Log.v(TAG, address + " >>> " + body);
+        Log.d(TAG, address + " >>> " + body);
         String[] args = body.split(" ");
         if (args.length > 0) {
             String command = args[0].toLowerCase();
@@ -69,7 +69,7 @@ public class SmsHandlerService extends IntentService {
             String nick = userManager.getAll().get(address);
             String body2 = String.format("%s: %s", nick.toUpperCase(), body);
             userManager.sendTextMessageToAll(body2, address);
-            userManager.sendTextMessage(address, body2);
+            userManager.sendTextMessage(address, getString(R.string.message_sent));
         }
     }
 
@@ -98,8 +98,11 @@ public class SmsHandlerService extends IntentService {
         }
 
         userManager.register(address, nick);
-        userManager.sendTextMessage(address, getString(R.string.message_success_registration));
-        userManager.sendTextMessageToAll(getString(R.string.message_success_registration_all, nick), address);
+        String msgUsers = getString(R.string.message_registered_users, TextUtils.join(", ", userManager.getAll().values()));
+        String msgRegistered = getString(R.string.message_success_registration) + " " + msgUsers;
+        String msgPleaseWelcome = getString(R.string.message_success_registration_all, nick) + " " + msgUsers;
+        userManager.sendTextMessage(address, msgRegistered);
+        userManager.sendTextMessageToAll(msgPleaseWelcome, address);
     }
 
     private void handleCommandOff(String address, String[] args) {

@@ -68,6 +68,7 @@ public class UserManager {
         if (parts.size() > 1) {
             bodyRepr += "...";
         }
-        Log.v(TAG, address + " <<< " + bodyRepr);
+        Log.d(TAG, address + " <<< " + bodyRepr);
     }
+
 }
